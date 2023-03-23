@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import { Typography,Button,Form,Input } from "antd";
 import Fileupload from "../../utils/FileUpload";
+import axios from 'axios'; 
 
 const {Title} = Typography;
 const {TextArea} = Input;
@@ -13,7 +14,7 @@ const Continents = [
 ]
 
 
-function UploadProductPage() {
+function UploadProductPage(props) {
     const [Title,setTitle] = useState("")
     const [Description,setDescription] = useState("")
     const [Price,setPrice] = useState(0)
@@ -32,15 +33,46 @@ function UploadProductPage() {
     const continentChangeHandler = (event) => {
         setContinent(event.currentTarget.value)
     }
+    const updateImages = (newImages) => {
+        setImages(newImages)
+    }
+    const submitHandler = (event) => {
+        event.preventdefault();
+
+        if(!Title || !Description || !Price || !Continent || !Images) {
+            return alert("빈칸을 채워주세요.")
+        }
+
+        const body = {
+            writer: props.user.userData._id,
+            title: Title,
+            description: Description,
+            price: Price,
+            images: Images,
+            continents: Continent
+        }
+        axios.post("/api/product",body)
+        .then(response =>{
+            if(response.data.success) {
+                alert("상품 업로드 성공")
+                
+            } else{
+                alert("상품 업로드 실패")
+            }
+            
+        })
+
+    }
+
     return (
         <div style={{maxWidth: "700px", margin:"2rem auto"}}>
             <div style={{textAlign:'center', marginBottom:'2rem'}}>
                 <h2>여행 상품 업로드</h2>
             </div>
-            <form>
+            <form onSubmit={submitHandler}>
 
-                <Fileupload/>
-                <br/>
+                <Fileupload refreshFuntion={updateImages}/>
+                <br/> 
                 <br/>
                 <label>이름</label>
                 <Input onChange={titleChangeHandler} value={Title}/>
@@ -62,7 +94,7 @@ function UploadProductPage() {
                 </select >
                 <br/>
                 <br/>
-                <Button>
+                <Button type="submit">
                     확인
                 </Button>
                 
