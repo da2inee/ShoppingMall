@@ -69,9 +69,9 @@ function UploadProductPage(props) {
             <div style={{textAlign:'center', marginBottom:'2rem'}}>
                 <h2>여행 상품 업로드</h2>
             </div>
-            <form onSubmit={submitHandler}>
+            <Form onSubmit={submitHandler}/>
 
-                <Fileupload refreshFuntion={updateImages}/>
+                <Fileupload refreshFuntion= {updateImages}/>
                 <br/> 
                 <br/>
                 <label>이름</label>
@@ -94,12 +94,10 @@ function UploadProductPage(props) {
                 </select >
                 <br/>
                 <br/>
-                <Button type="submit">
+                <Button onClick={submitHandler}>
                     확인
                 </Button>
                 
-                
-            </form>
         </div>
     )
 }
